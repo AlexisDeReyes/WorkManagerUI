@@ -5,7 +5,7 @@ import { Task } from '../Types/Task';
 let APIConfig = axios.defaults;
 APIConfig.baseURL = "http://localhost:8080";
 
-export class APIService {
+export default class APIService {
 
     public static PostTeam = (name: string) => {
         return axios.post<Team>("/teams", {"name": name}, APIConfig);

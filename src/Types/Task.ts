@@ -6,7 +6,15 @@ export enum TaskStatus {
     Ready = "Ready",
     InProgress = "In Progress",
     Done = "Done"
+};
+
+export enum TaskStatusAsNumber {
+    New = 0,
+    Ready = 1,
+    InProgress = 2,
+    Done = 3
 }
+
 
 export class Task extends TaskHolder implements IQueryable {
 

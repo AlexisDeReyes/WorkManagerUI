@@ -6,7 +6,7 @@ import Team from './Team/Team';
 const Router: React.FC = () => {
     return (
         <BrowserRouter>
-            <Route path="/Home" component={App}/>
+            <Route exact path="/" component={App}/>
             <Route path="/team/:name" render={ props => (<Team teamName={props.match.params.name}/>)
             }/>
         </BrowserRouter>
