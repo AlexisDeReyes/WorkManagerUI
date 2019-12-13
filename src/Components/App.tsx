@@ -1,26 +1,36 @@
-import React, { useState } from 'react';
 import { AxiosResponse } from 'axios';
-import APIService from '../Services/ApiService';
-import { Team } from '../Types/Team';
+import React, { Component, useState } from 'react';
+import ApiService from '../Services/ApiService';
+import Team from '../Types/Team';
+import ServiceComponent from './ServiceComponent/ServiceComponent';
 
-const App: React.FC = () => {
-  const [newTeamName, setNewTeamName] = useState("");
+interface AppState {
+  TeamName: string;
+}
 
-  const CreateNewTeam = () => {
-    APIService.PostTeam(newTeamName).then((response: AxiosResponse<Team>) => {
-      window.location.href = `http://localhost:3000/team/${newTeamName}`;
-    }).catch((error: any) => {
-      console.log(error);
-    });
+export default class App extends ServiceComponent<any, AppState> {
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      TeamName: ''
+    };
   }
 
-  return (
+  public CreateNewTeam = () => {
+    this.WebService.PostTeam(this.state.TeamName).then((response: AxiosResponse<Team>) => {
+      window.location.assign(`http://localhost:3000/team/${this.state.TeamName}`);
+    });
+  };
+
+  public render = () => (
     <div>
       <h1>Create a team</h1>
-      <input type="text" value={newTeamName} onChange={event => setNewTeamName(event.target.value)}/>
-      <button onClick={CreateNewTeam}>Create New Team</button>
+      <input
+        type='text'
+        value={this.state.TeamName}
+        onChange={event => this.setState({ TeamName: event.target.value })}
+      />
+      <button onClick={this.CreateNewTeam}>Create New Team</button>
     </div>
   );
 }
-
-export default App;

@@ -1,26 +1,18 @@
-import IQueryable from "./IQueryable";
-import TaskHolder from "./TaskHolder";
-import { AxiosResponse } from "axios";
+import { AxiosResponse } from 'axios';
+import TaskHolder from './TaskHolder';
 
-export class Team extends TaskHolder implements IQueryable {
-    public name: string;
-    
-    static GetFromApiResponse(response: AxiosResponse<Team>): Team {
-        let newTeam = new Team(response.data.name);
-        newTeam.taskColumns = response.data.taskColumns;
-        newTeam.id = response.data.id;
-        
-        newTeam.SortColumns();
+export default class Team extends TaskHolder {
+  public static GetFromApiResponse(dtoTeam: Team): Team {
+    const newTeam = new Team(dtoTeam.name);
+    newTeam.taskColumns = dtoTeam.taskColumns;
+    newTeam.id = dtoTeam.id;
 
-        return newTeam;
-    }
-    
-    constructor(name: string) {
-        super();
-        this.name = name;
-    }
+    return newTeam;
+  }
+  public name: string;
 
-    public Query(q: string) {
-        return this.name.toLowerCase().indexOf(q) !== -1;
-    }
+  constructor(name: string) {
+    super();
+    this.name = name;
+  }
 }

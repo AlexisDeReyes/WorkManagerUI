@@ -1,21 +1,21 @@
-import React from 'react';
+import React from "react";
 
-import Task from '../Task/Task';
+import Task from "../Task/Task";
 
-import PrioritizedList from '../../Types/PrioritizedList';
+import PrioritizedList from "../../Types/PrioritizedList";
 
-type TaskColumnProp = { 
-    key: string;
-    List: PrioritizedList;
-};
+interface TaskColumnProp {
+  key: string;
+  List: PrioritizedList;
+}
 
-export default function TaskColumn(props: TaskColumnProp){
-    return (
-        <div>
-            <h2>{props.List.name}</h2>
-            {props.List.tasks.map(task => 
-                <Task key={task.id || ""} Task={task}/>
-            )}
-        </div>
-    );
+export default function TaskColumn(props: TaskColumnProp) {
+  return (
+    <div>
+      <h2>{props.List.name}</h2>
+      {props.List.tasks.map((task) => (
+        <Task key={task.id || ""} Task={task} />
+      ))}
+    </div>
+  );
 }

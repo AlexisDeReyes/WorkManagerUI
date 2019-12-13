@@ -1,45 +1,65 @@
 import ApiService from './ApiService';
 import { v4 as uuid } from 'uuid';
 import { Task } from '../Types/Task';
-import { Team } from '../Types/Team';
+import Team from '../Types/Team';
 
-it('creates a team', () => {
-  const teamName = uuid();
+describe('ApiService Tests', () => {
+	let teamName: string;
+	const WebService: ApiService = new ApiService();
 
-  return ApiService.PostTeam(teamName).then(response => {
-    expect(response.status).toEqual(200); 
-    expect(response.data as Team).not.toBeNull();
-    expect(response.data.name).toEqual(teamName);
-    expect(response.data.id).not.toBeNull();
-  }).catch(error => {
-      expect(error).toBeNull();
-  });
-});
+	beforeEach(() => {
+		teamName = uuid();
+	});
 
-it('creates a task', () => {
-    const teamName = uuid();
-  
-    return ApiService.PostTeam(teamName).then(response => {
-        const taskName = uuid();
-        return ApiService.PostTask(teamName, new Task(taskName)).then(response => {
-            expect(response.status).toEqual(200);
-            expect(response.data as Task).not.toBeNull();
-            expect(response.data.name).toEqual(taskName);
-            expect(response.data.id).not.toBeUndefined();
-        }).catch(error => expect(error).toBeNull());
-    }).catch(error => {
-        expect(error).toBeNull();
-    });
-});
+	it('creates a team', () => {
+		return WebService.PostTeam(teamName)
+			.then(response => {
+				expect(response.status).toEqual(200);
+				expect(response.data as Team).not.toBeNull();
+				expect(response.data.name).toEqual(teamName);
+				expect(response.data.id).not.toBeNull();
+			})
+			.catch(error => {
+				expect(error).toBeNull();
+			});
+	});
 
-it('retrieves a team', () => {
-  const teamName = uuid();
+	it('creates a task', () => {
+		return WebService.PostTeam(teamName)
+			.then(response => {
+				const name = uuid();
+				const description = uuid();
+				const newTask = new Task(name, description);
+				return WebService.PostTask(teamName, newTask)
+					.then(response => {
+						expect(response.status).toEqual(200);
 
-  return ApiService.PostTeam(teamName).then(response => {
-      return ApiService.GetTeam(teamName)
-        .then(response => expect(response.data as Team).not.toBeNull())
-        .catch(error => expect(error).toBeNull());
-  }).catch(error => {
-      expect(error).toBeNull();
-  });
+						const resultantTeam = Team.GetFromApiResponse(response.data.Team);
+						expect(resultantTeam).not.toBeNull();
+
+						const resultantTask = response.data.Task;
+						expect(resultantTask.name).toEqual(name);
+						expect(resultantTask.description).toEqual(description);
+						expect(resultantTask.id).not.toBeUndefined();
+					})
+					.catch(error => expect(error).toBeNull());
+			})
+			.catch(error => {
+				expect(error).toBeNull();
+			});
+	});
+
+	it('retrieves a team', async () => {
+		try {
+			const response = await WebService.PostTeam(teamName);
+			try {
+				const response_1 = await WebService.GetTeam(teamName);
+				return expect(response_1.data as Team).not.toBeNull();
+			} catch (error) {
+				return expect(error).toBeNull();
+			}
+		} catch (error_1) {
+			expect(error_1).toBeNull();
+		}
+	});
 });

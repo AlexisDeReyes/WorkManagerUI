@@ -1,3 +1,3 @@
 export default interface IQueryable {
-    Query: (q: string) => boolean;
+  Query: (q: string) => boolean;
 }
